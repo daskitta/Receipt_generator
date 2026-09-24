@@ -23,9 +23,9 @@ const initialData = {
   dropoffTime: '16:35',
   distance: '8.9',
   currency: 'NPR',
-  fareAmount: '181.00',
+  fareAmount: '200.00',
   paymentMethod: 'Cash',
-  ticketNumber: 'NP26092310402GI'
+  ticketNumber: 'NP260923101402LIcv'
 }
 
 export default function App() {
@@ -57,7 +57,7 @@ export default function App() {
   function regenerate() {
     setData((prev) => ({
       ...prev,
-      ticketNumber: generateTicketNumber(prev.companyName || 'RC')
+      ticketNumber: generateTicketNumber()
     }))
   }
 
@@ -94,7 +94,7 @@ export default function App() {
         <div className="preview-toolbar">
           <span>Live preview</span>
           <button type="button" className="btn-primary" onClick={exportPdf} disabled={busy}>
-            {busy ? 'Preparing…' : 'Download PDF'}
+            {busy ? 'Preparing' : 'Download PDF'}
           </button>
         </div>
         <div className="preview-stage" ref={previewStageRef}>
