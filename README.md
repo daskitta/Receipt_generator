@@ -9,8 +9,6 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL in your browser.
-
 ## Build for production
 
 ```
