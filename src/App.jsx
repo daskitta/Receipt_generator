@@ -8,21 +8,22 @@ import { generateTicketNumber } from './utils/generateTicketNumber.js'
 const today = new Date().toISOString().slice(0, 10)
 
 const initialData = {
-  companyName: '',
-  companyLogo: null,
-  driverName: '',
-  vehicleDetails: '',
-  passengerName: '',
-  rideDate: today,
-  pickupPlace: '',
-  pickupTime: '',
-  dropoffPlace: '',
-  dropoffTime: '',
-  distance: '',
-  currency: 'USD',
-  fareAmount: '',
+  companyName: 'inDrive',
+  companyLogo: '/logo.jpg',
+  issuedBy: 'I.N.D. Mobile Pvt. Ltd',
+  driverName: 'Pemba Dhwajra Tamang',
+  vehicleDetails: 'black MOTOR-BIKE Bajaj BA32PA7999',
+  passengerName: 'Aashutosh Dhungel',
+  rideDate: '2026-09-23',
+  pickupPlace: 'Madan Bhandari Road, Kathmandu, Province No. 3, Nepal',
+  pickupTime: '16:04',
+  dropoffPlace: 'Venus Public School, Kathmandu, Province No. 3, Nepal',
+  dropoffTime: '16:35',
+  distance: '8.9',
+  currency: 'NPR',
+  fareAmount: '181.00',
   paymentMethod: 'Cash',
-  ticketNumber: generateTicketNumber('RC')
+  ticketNumber: 'NP26092310402GI'
 }
 
 export default function App() {

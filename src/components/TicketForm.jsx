@@ -36,12 +36,12 @@ export default function TicketForm({ data, onChange, onRegenerate }) {
       <div className="form-section">
         <h2>Company</h2>
         <div className="form-grid">
-          <Field label="Company name">
+          <Field label="Issued by">
             <input
               type="text"
-              placeholder="Your company Ltd."
-              value={data.companyName}
-              onChange={(e) => set('companyName', e.target.value)}
+              placeholder="Issuer name"
+              value={data.issuedBy}
+              onChange={(e) => set('issuedBy', e.target.value)}
             />
           </Field>
           <Field label="Logo">

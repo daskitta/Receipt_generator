@@ -27,19 +27,17 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
         {d.companyLogo ? (
           <img src={d.companyLogo} alt="logo" className="ticket-logo" />
         ) : (
-          <div className="ticket-logo ticket-logo-placeholder">
-            {(d.companyName || 'R').charAt(0).toUpperCase()}
-          </div>
+          <img src="/logo.jpg" alt="logo" className="ticket-logo" />
         )}
-        <span className="ticket-brand-name">{d.companyName || 'Your Company'}</span>
+        <span className="ticket-brand-name">{d.companyName || 'inDrive'}</span>
       </div>
 
       <p className="ticket-kind">Passenger Ticket</p>
 
-      <div className="ticket-row ticket-row-split">
+      <div className="ticket-row ticket-row-split ticket-info-header">
         <div>
           <span className="ticket-label">Ticket number: </span>
-          <span>{d.ticketNumber}</span>
+          <span>{d.ticketNumber || '—'}</span>
         </div>
         <div>
           <span className="ticket-label">Ticket date: </span>
@@ -50,14 +48,14 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
       <div className="ticket-block">
         <div className="ticket-row">
           <span className="ticket-label">Issued by: </span>
-          <span>{d.companyName || '—'}</span>
+          <span>{d.issuedBy || d.companyName || '—'}</span>
         </div>
         <div className="ticket-row">
           <span className="ticket-label">On behalf of the driver (transport service provider): </span>
           <span>{d.driverName || '—'}</span>
         </div>
         <div className="ticket-row">
-          <span className="ticket-label">Vehicle details: </span>
+          <span className="ticket-label">Car details: </span>
           <span>{d.vehicleDetails || '—'}</span>
         </div>
         <div className="ticket-row">
@@ -66,20 +64,28 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
         </div>
       </div>
 
-      <div className="ticket-block">
-        <p className="ticket-label">Ride Date:</p>
-        <p>{rideDateLabel}</p>
+      <div className="ticket-block ticket-trip-block">
+        <div className="ticket-row">
+          <span className="ticket-label">Ride Date:</span>
+        </div>
+        <div className="ticket-row">{rideDateLabel}</div>
 
-        <p className="ticket-label">Pick-up:</p>
-        <p>{d.pickupPlace || '—'}</p>
-        <p>{formatTime(d.pickupTime)}, {rideDateLabel}</p>
+        <div className="ticket-row">
+          <span className="ticket-label">Pick-up:</span>
+        </div>
+        <div className="ticket-row">{d.pickupPlace || '—'}</div>
+        <div className="ticket-row">{formatTime(d.pickupTime)}, {rideDateLabel}</div>
 
-        <p className="ticket-label">Drop-off:</p>
-        <p>{d.dropoffPlace || '—'}</p>
-        <p>{formatTime(d.dropoffTime)}, {rideDateLabel}</p>
+        <div className="ticket-row">
+          <span className="ticket-label">Drop-off:</span>
+        </div>
+        <div className="ticket-row">{d.dropoffPlace || '—'}</div>
+        <div className="ticket-row">{formatTime(d.dropoffTime)}, {rideDateLabel}</div>
 
-        <p className="ticket-label">Distance:</p>
-        <p>{d.distance ? `${d.distance} km` : '—'}</p>
+        <div className="ticket-row">
+          <span className="ticket-label">Distance:</span>
+        </div>
+        <div className="ticket-row">{d.distance ? `${d.distance} km` : '—'}</div>
       </div>
 
       <div className="ticket-table">
@@ -96,7 +102,7 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
       <div className="ticket-row ticket-row-split ticket-total">
         <div>
           <span className="ticket-label">Payment method: </span>
-          <span>{d.paymentMethod}</span>
+          <span>{d.paymentMethod || 'Cash'}</span>
         </div>
         <div>
           <span className="ticket-label">Total Amount: </span>
