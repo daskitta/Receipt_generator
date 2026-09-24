@@ -244,6 +244,25 @@ select {
   overflow: auto;
 }
 
+.preview-paper {
+  position: relative;
+  width: 794px;
+  max-width: 794px;
+}
+
+.preview-paper-scale {
+  transform-origin: top center;
+}
+
+.export-surface {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 794px;
+  pointer-events: none;
+  opacity: 0;
+}
+
 .ticket {
   width: 100%;
   max-width: 700px;
@@ -255,6 +274,20 @@ select {
   line-height: 1.42;
   position: relative;
   box-shadow: none;
+}
+
+.preview-paper .ticket,
+.export-surface .ticket {
+  width: 794px;
+  max-width: 794px;
+  min-height: 1123px;
+  padding: 18px 26px 10px;
+}
+
+.preview-paper .ticket-row-split,
+.export-surface .ticket-row-split {
+  flex-direction: row;
+  gap: 12px;
 }
 
 .ticket-brand {
@@ -366,15 +399,8 @@ select {
     padding: 24px 10px 36px;
   }
 
-  .ticket {
-    max-width: 100%;
-    min-height: auto;
-    padding: 26px 18px 18px;
-  }
-
-  .ticket-row-split {
-    flex-direction: column;
-    gap: 4px;
+  .preview-paper {
+    max-width: 794px;
   }
 }
 
