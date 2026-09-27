@@ -8,9 +8,10 @@ export function generateTicketNumber(prefix = 'NP') {
   const cleanPrefix = prefix.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 3) || 'NP'
   const now = new Date()
   
-  const y = String(now.getUTCFullYear()).slice(2)
-  const datePart = `${y}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}`
-  const timePart = `${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}`
+  // Changed UTC methods to Local methods to match local rideDate
+  const y = String(now.getFullYear()).slice(2)
+  const datePart = `${y}${pad(now.getMonth() + 1)}${pad(now.getDate())}`
+  const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
   
   let rand = ''
   for (let i = 0; i < 4; i++) {

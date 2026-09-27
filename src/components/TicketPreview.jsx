@@ -114,7 +114,7 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
         </div>
         <div>
           <span className="ticket-label">Total Amount: </span>
-          <span className="ticket-bold">{currency} {amount}</span>
+          <span className="ticket-value">{currency} {amount}</span>
         </div>
       </div>
     </div>

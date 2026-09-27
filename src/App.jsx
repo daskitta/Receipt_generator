@@ -8,13 +8,21 @@ import { generateTicketNumber } from './utils/generateTicketNumber.js'
 const EXPORT_WIDTH_PX = 794
 const EXPORT_HEIGHT_PX = 1123
 
+const getTodayLocalDate = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 const initialData = {
   companyLogo: '/logo.jpg',
   issuedBy: 'I.N.D. Mobile Pvt. Ltd',
   driverName: 'Pemba Dhwajra Tamang',
   vehicleDetails: 'black MOTOR-BIKE Bajaj BA32PA7999',
   passengerName: 'Aashutosh Dhungel',
-  rideDate: '2026-09-23',
+  rideDate: getTodayLocalDate(),
   pickupPlace: 'Madan Bhandari Road, Kathmandu, Province No. 3, Nepal',
   pickupTime: '16:04',
   dropoffPlace: 'Venus Public School, Kathmandu, Province No. 3, Nepal',
@@ -23,7 +31,7 @@ const initialData = {
   currency: 'NPR',
   fareAmount: '181.00',
   paymentMethod: 'Cash',
-  ticketNumber: 'NP260923101402IGJi'
+  ticketNumber: generateTicketNumber() 
 }
 
 export default function App() {
