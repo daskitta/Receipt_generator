@@ -5,12 +5,10 @@ import TicketForm from './components/TicketForm.jsx'
 import TicketPreview from './components/TicketPreview.jsx'
 import { generateTicketNumber } from './utils/generateTicketNumber.js'
 
-const today = new Date().toISOString().slice(0, 10)
 const EXPORT_WIDTH_PX = 794
 const EXPORT_HEIGHT_PX = 1123
 
 const initialData = {
-  companyName: 'inDrive',
   companyLogo: '/logo.jpg',
   issuedBy: 'I.N.D. Mobile Pvt. Ltd',
   driverName: 'Pemba Dhwajra Tamang',
@@ -23,16 +21,15 @@ const initialData = {
   dropoffTime: '16:35',
   distance: '8.9',
   currency: 'NPR',
-  fareAmount: '200.00',
+  fareAmount: '181.00',
   paymentMethod: 'Cash',
-  ticketNumber: 'NP260923101402LIcv'
+  ticketNumber: 'NP260923101402IGJi'
 }
 
 export default function App() {
   const [data, setData] = useState(initialData)
   const [busy, setBusy] = useState(false)
   const [previewScale, setPreviewScale] = useState(1)
-  const ticketRef = useRef(null)
   const exportTicketRef = useRef(null)
   const previewStageRef = useRef(null)
 
@@ -41,9 +38,9 @@ export default function App() {
     if (!stage) return undefined
 
     function updatePreviewScale() {
-      const availableWidth = stage.clientWidth - 24
-      const nextScale = Math.min(1, availableWidth / EXPORT_WIDTH_PX)
-      setPreviewScale(nextScale > 0 ? nextScale : 1)
+      const availableWidth = stage.clientWidth - 32
+      const nextScale = availableWidth / EXPORT_WIDTH_PX
+      setPreviewScale(nextScale < 1 ? nextScale : 1)
     }
 
     updatePreviewScale()
@@ -62,25 +59,34 @@ export default function App() {
   }
 
   async function exportPdf() {
-    if (!exportTicketRef.current) return
+    if (!exportTicketRef.current || busy) return
     setBusy(true)
+
     try {
       const canvas = await html2canvas(exportTicketRef.current, {
-        scale: 3,
+        scale: 2,
         backgroundColor: '#ffffff',
         useCORS: true,
-        width: exportTicketRef.current.scrollWidth,
-        height: exportTicketRef.current.scrollHeight
+        allowTaint: true,
+        width: EXPORT_WIDTH_PX,
+        height: EXPORT_HEIGHT_PX,
+        windowWidth: EXPORT_WIDTH_PX,
+        windowHeight: EXPORT_HEIGHT_PX,
+        logging: false
       })
+
       const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       })
+
       pdf.addImage(imgData, 'PNG', 0, 0, 210, 297)
-      const name = `ticket-${data.ticketNumber}.pdf`
-      pdf.save(name)
+      pdf.save(`ticket-${data.ticketNumber}.pdf`)
+    } catch (err) {
+      console.error('PDF export failed', err)
+      alert('Failed to generate PDF')
     } finally {
       setBusy(false)
     }
@@ -99,17 +105,20 @@ export default function App() {
         </div>
         <div className="preview-stage" ref={previewStageRef}>
           <div
-            className="preview-paper"
+            className="preview-paper-wrapper"
             style={{
-              width: `${EXPORT_WIDTH_PX}px`,
+              width: `${EXPORT_WIDTH_PX * previewScale}px`,
               height: `${EXPORT_HEIGHT_PX * previewScale}px`
             }}
           >
             <div
               className="preview-paper-scale"
-              style={{ transform: `scale(${previewScale})` }}
+              style={{
+                transform: `scale(${previewScale})`,
+                transformOrigin: 'top left'
+              }}
             >
-              <TicketPreview data={data} ref={ticketRef} />
+              <TicketPreview data={data} />
             </div>
           </div>
         </div>

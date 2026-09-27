@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
 
+/* Format date string */
 function formatDate(value) {
   if (!value) return '—'
   const d = new Date(value + 'T00:00:00')
@@ -7,6 +8,7 @@ function formatDate(value) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+/* Format time string */
 function formatTime(value) {
   if (!value) return '—'
   const [h, m] = value.split(':')
@@ -19,94 +21,100 @@ const TicketPreview = forwardRef(function TicketPreview(props, ref) {
   const d = props.data
   const rideDateLabel = formatDate(d.rideDate)
   const amount = d.fareAmount ? Number(d.fareAmount).toFixed(2) : '0.00'
-  const currency = (d.currency || 'USD').toUpperCase()
+  const currency = (d.currency || 'NPR').toUpperCase()
 
   return (
     <div className="ticket" ref={ref}>
-      <div className="ticket-brand">
-        {d.companyLogo ? (
-          <img src={d.companyLogo} alt="logo" className="ticket-logo" />
-        ) : (
-          <img src="/logo.jpg" alt="logo" className="ticket-logo" />
-        )}
-        <span className="ticket-brand-name">{d.companyName || 'inDrive'}</span>
+      {/* Top logo header */}
+      <div className="ticket-header">
+        <div className="ticket-brand">
+          <img
+            src={d.companyLogo || '/logo.jpg'}
+            alt="inDrive"
+            className="ticket-logo"
+          />
+        </div>
+        <h1 className="ticket-title">Passenger Ticket</h1>
       </div>
 
-      <p className="ticket-kind">Passenger Ticket</p>
-
-      <div className="ticket-row ticket-row-split ticket-info-header">
+      {/* Meta header row */}
+      <div className="ticket-row-split ticket-top-meta">
         <div>
           <span className="ticket-label">Ticket number: </span>
-          <span>{d.ticketNumber || '—'}</span>
+          <span className="ticket-value">{d.ticketNumber || '—'}</span>
         </div>
         <div>
           <span className="ticket-label">Ticket date: </span>
-          <span>{rideDateLabel}</span>
+          <span className="ticket-value">{rideDateLabel}</span>
         </div>
       </div>
 
-      <div className="ticket-block">
-        <div className="ticket-row">
+      {/* Issuer and driver info */}
+      <div className="ticket-section-block">
+        <div className="ticket-line">
           <span className="ticket-label">Issued by: </span>
-          <span>{d.issuedBy || d.companyName || '—'}</span>
+          <span className="ticket-value">{d.issuedBy || '—'}</span>
         </div>
-        <div className="ticket-row">
+        <div className="ticket-line">
           <span className="ticket-label">On behalf of the driver (transport service provider): </span>
-          <span>{d.driverName || '—'}</span>
+          <span className="ticket-value">{d.driverName || '—'}</span>
         </div>
-        <div className="ticket-row">
+        <div className="ticket-line">
           <span className="ticket-label">Car details: </span>
-          <span>{d.vehicleDetails || '—'}</span>
+          <span className="ticket-value">{d.vehicleDetails || '—'}</span>
         </div>
-        <div className="ticket-row">
+        <div className="ticket-line">
           <span className="ticket-label">Passenger's name: </span>
-          <span>{d.passengerName || '—'}</span>
+          <span className="ticket-value">{d.passengerName || '—'}</span>
         </div>
       </div>
 
-      <div className="ticket-block ticket-trip-block">
-        <div className="ticket-row">
-          <span className="ticket-label">Ride Date:</span>
+      {/* Ride details */}
+      <div className="ticket-section-block ticket-trip-details">
+        <div className="ticket-field-group">
+          <div className="ticket-label">Ride Date:</div>
+          <div className="ticket-value">{rideDateLabel}</div>
         </div>
-        <div className="ticket-row">{rideDateLabel}</div>
 
-        <div className="ticket-row">
-          <span className="ticket-label">Pick-up:</span>
+        <div className="ticket-field-group">
+          <div className="ticket-label">Pick-up:</div>
+          <div className="ticket-value">{d.pickupPlace || '—'}</div>
+          <div className="ticket-value">{formatTime(d.pickupTime)}, {rideDateLabel}</div>
         </div>
-        <div className="ticket-row">{d.pickupPlace || '—'}</div>
-        <div className="ticket-row">{formatTime(d.pickupTime)}, {rideDateLabel}</div>
 
-        <div className="ticket-row">
-          <span className="ticket-label">Drop-off:</span>
+        <div className="ticket-field-group">
+          <div className="ticket-label">Drop-off:</div>
+          <div className="ticket-value">{d.dropoffPlace || '—'}</div>
+          <div className="ticket-value">{formatTime(d.dropoffTime)}, {rideDateLabel}</div>
         </div>
-        <div className="ticket-row">{d.dropoffPlace || '—'}</div>
-        <div className="ticket-row">{formatTime(d.dropoffTime)}, {rideDateLabel}</div>
 
-        <div className="ticket-row">
-          <span className="ticket-label">Distance:</span>
+        <div className="ticket-field-group">
+          <div className="ticket-label">Distance:</div>
+          <div className="ticket-value">{d.distance ? `${d.distance} km` : '—'}</div>
         </div>
-        <div className="ticket-row">{d.distance ? `${d.distance} km` : '—'}</div>
       </div>
 
+      {/* Table section */}
       <div className="ticket-table">
         <div className="ticket-table-row ticket-table-head">
-          <span>Description</span>
-          <span>Amount</span>
+          <span className="ticket-col-desc">Description</span>
+          <span className="ticket-col-amount">Amount</span>
         </div>
-        <div className="ticket-table-row ticket-table-item">
-          <span>Ride fare (incl. tax)</span>
-          <span>{currency} {amount}</span>
+        <div className="ticket-table-row ticket-table-body">
+          <span className="ticket-col-desc ticket-bold">Ride fare (incl. tax)</span>
+          <span className="ticket-col-amount">{currency} {amount}</span>
         </div>
       </div>
 
-      <div className="ticket-row ticket-row-split ticket-total">
+      {/* Footer info */}
+      <div className="ticket-row-split ticket-footer">
         <div>
           <span className="ticket-label">Payment method: </span>
-          <span>{d.paymentMethod || 'Cash'}</span>
+          <span className="ticket-value">{d.paymentMethod || 'Cash'}</span>
         </div>
         <div>
           <span className="ticket-label">Total Amount: </span>
-          <span>{currency} {amount}</span>
+          <span className="ticket-bold">{currency} {amount}</span>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-// input field with label
+// input field component
 function Field({ label, children }) {
   return (
     <label className="field">
