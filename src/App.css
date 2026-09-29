@@ -352,7 +352,7 @@ select {
   height: 1123px !important;
   background: #ffffff !important;
   color: #000000;
-  padding: 50px 60px !important;
+  padding: 50px 80px !important;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13.5px;
   line-height: 1.45;
@@ -372,7 +372,7 @@ select {
 }
 
 .ticket-logo {
-  height: 60px;
+  height: 80px;
   width: auto;
   object-fit: contain;
 }
@@ -435,7 +435,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 5px 0 10px 0;
 }
 
 .ticket-table-head {
@@ -447,7 +447,7 @@ select {
 
 .ticket-table-body {
   border-bottom: 1px solid #111111;
-  padding: 12px 0;
+  padding: 5px 0;
 }
 
 .ticket-col-desc {
