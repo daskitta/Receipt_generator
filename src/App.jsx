@@ -7,6 +7,7 @@ import { generateTicketNumber } from './utils/generateTicketNumber.js'
 
 const EXPORT_WIDTH_PX = 794
 const EXPORT_HEIGHT_PX = 1123
+const STORAGE_KEY = 'ride-receipt-generator:data-v1'
 
 const getTodayLocalDate = () => {
   const date = new Date()
@@ -31,15 +32,47 @@ const initialData = {
   currency: 'NPR',
   fareAmount: '181.00',
   paymentMethod: 'Cash',
-  ticketNumber: generateTicketNumber() 
+  ticketNumber: generateTicketNumber()
+}
+
+function getStoredData() {
+  if (typeof window === 'undefined') return null
+
+  try {
+    const storedValue = window.localStorage.getItem(STORAGE_KEY)
+    if (!storedValue) return null
+
+    const parsed = JSON.parse(storedValue)
+    return parsed && typeof parsed === 'object' ? { ...initialData, ...parsed } : null
+  } catch (error) {
+    console.warn('Unable to read saved receipt data', error)
+    return null
+  }
 }
 
 export default function App() {
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState(() => getStoredData() || initialData)
   const [busy, setBusy] = useState(false)
   const [previewScale, setPreviewScale] = useState(1)
+  const [installPrompt, setInstallPrompt] = useState(null)
+  const [isInstallable, setIsInstallable] = useState(false)
   const exportTicketRef = useRef(null)
   const previewStageRef = useRef(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    try {
+      const serialized = JSON.stringify(data)
+      if (serialized.length < 4_500_000) {
+        window.localStorage.setItem(STORAGE_KEY, serialized)
+      } else {
+        console.warn('Saved receipt data was too large to store locally')
+      }
+    } catch (error) {
+      console.warn('Unable to save receipt data', error)
+    }
+  }, [data])
 
   useEffect(() => {
     const stage = previewStageRef.current
@@ -59,11 +92,61 @@ export default function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return undefined
+
+    navigator.serviceWorker
+      .register('/sw.js')
+      .catch((error) => console.error('Service worker registration failed', error))
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault()
+      setInstallPrompt(event)
+      setIsInstallable(true)
+    }
+
+    const handleAppInstalled = () => {
+      setIsInstallable(false)
+      setInstallPrompt(null)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [])
+
   function regenerate() {
     setData((prev) => ({
       ...prev,
       ticketNumber: generateTicketNumber()
     }))
+  }
+
+  function clearSavedData() {
+    if (typeof window === 'undefined') return
+
+    window.localStorage.removeItem(STORAGE_KEY)
+    setData({
+      ...initialData,
+      ticketNumber: generateTicketNumber()
+    })
+  }
+
+  async function handleInstall() {
+    if (!installPrompt) return
+
+    installPrompt.prompt()
+    const choice = await installPrompt.userChoice
+
+    if (choice.outcome === 'accepted') {
+      setIsInstallable(false)
+    }
+
+    setInstallPrompt(null)
   }
 
   async function exportPdf() {
@@ -102,14 +185,36 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <TicketForm data={data} onChange={setData} onRegenerate={regenerate} />
+      <div className="form-column">
+        <TicketForm
+          data={data}
+          onChange={setData}
+          onRegenerate={regenerate}
+          onClearSavedData={clearSavedData}
+        />
+        <div className="developer-credit">
+          <a href="https://www.prasant-bhattarai.com.np/" target="_blank" rel="noreferrer">
+            Developed by Prasant Bhattarai
+          </a>
+        </div>
+      </div>
 
       <div className="preview-panel">
         <div className="preview-toolbar">
-          <span>Live preview</span>
-          <button type="button" className="btn-primary" onClick={exportPdf} disabled={busy}>
-            {busy ? 'Preparing' : 'Download PDF'}
-          </button>
+          <div className="toolbar-status">
+            <span>Live preview</span>
+            <span className="status-badge">Offline ready</span>
+          </div>
+          <div className="toolbar-actions">
+            {isInstallable && (
+              <button type="button" className="btn-secondary" onClick={handleInstall}>
+                Install app
+              </button>
+            )}
+            <button type="button" className="btn-primary" onClick={exportPdf} disabled={busy}>
+              {busy ? 'Preparing' : 'Download PDF'}
+            </button>
+          </div>
         </div>
         <div className="preview-stage" ref={previewStageRef}>
           <div

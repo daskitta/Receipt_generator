@@ -10,7 +10,7 @@ function Field({ label, children }) {
   )
 }
 
-export default function TicketForm({ data, onChange, onRegenerate }) {
+export default function TicketForm({ data, onChange, onRegenerate, onClearSavedData }) {
   const fileRef = useRef(null)
 
   function set(key, value) {
@@ -185,9 +185,14 @@ export default function TicketForm({ data, onChange, onRegenerate }) {
           <span>Ticket number</span>
           <strong>{data.ticketNumber}</strong>
         </div>
-        <button type="button" className="btn-ghost" onClick={onRegenerate}>
-          Regenerate number
-        </button>
+        <div className="form-footer-actions">
+          <button type="button" className="btn-ghost" onClick={onRegenerate}>
+            Regenerate number
+          </button>
+          <button type="button" className="btn-text danger" onClick={onClearSavedData}>
+            Clear saved data
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -46,12 +46,19 @@ select {
 }
 
 /* Left panel form styles */
+.form-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .form-panel {
   padding: 40px 36px 60px;
   overflow-y: auto;
   border-right: 1px solid var(--line);
   max-height: 100vh;
   background: #f5f5f5;
+  flex: 1;
 }
 
 .form-eyebrow {
@@ -160,6 +167,10 @@ select {
   padding: 0;
 }
 
+.btn-text.danger {
+  color: #a33f3f;
+}
+
 .form-footer {
   margin-top: 32px;
   padding-top: 20px;
@@ -168,6 +179,13 @@ select {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -190,6 +208,25 @@ select {
 }
 
 /* Right side preview panel */
+.developer-credit {
+  padding: 0 16px 14px;
+  text-align: right;
+  background: #f5f5f5;
+  border-right: 1px solid var(--line);
+}
+
+.developer-credit a {
+  color: rgba(17, 17, 17, 0.45);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.developer-credit a:hover {
+  color: rgba(17, 17, 17, 0.7);
+}
+
 .preview-panel {
   display: flex;
   flex-direction: column;
@@ -206,11 +243,38 @@ select {
   font-size: 13px;
   color: var(--text-dim);
   background: rgba(255, 255, 255, 0.08);
+  gap: 12px;
 }
 
-.btn-primary {
-  background: var(--green);
-  color: #0a1a13;
+.toolbar-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(46, 199, 130, 0.12);
+  border: 1px solid rgba(46, 199, 130, 0.25);
+  color: var(--green-deep);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
   border: none;
   padding: 10px 18px;
   border-radius: 8px;
@@ -220,11 +284,24 @@ select {
   transition: filter 0.15s ease, transform 0.1s ease;
 }
 
-.btn-primary:hover {
+.btn-primary {
+  background: var(--green);
+  color: #0a1a13;
+}
+
+.btn-secondary {
+  background: rgba(17, 17, 17, 0.04);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
   filter: brightness(1.05);
 }
 
-.btn-primary:active {
+.btn-primary:active,
+.btn-secondary:active {
   transform: translateY(1px);
 }
 
